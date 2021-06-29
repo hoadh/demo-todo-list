@@ -34,8 +34,9 @@ function showList() {
 function remove(event) {
     // xoá phần tử trong mảng todoList tại index đã cho
     let liElement = event.target;
-    
-    alert("Bạn muốn xóa phần tử có index là " + liElement.id + " phải không?");
+    let index = liElement.id;
+    todoList.splice(index, 1); // xóa todo khỏi todoList (mảng)
+    showList();
 }
 
 
