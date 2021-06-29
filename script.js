@@ -1,4 +1,6 @@
-let todoList = [];
+let todoList = ["Việc 1", "Việc 2", "Việc 3"];
+
+showList();
 
 function add() {
     // lấy dữ liệu từ input
@@ -23,7 +25,11 @@ function showList() {
 
         let liElement = document.createElement("li");
         liElement.id = i;
+        liElement.draggable = true;
         liElement.addEventListener("click", remove);
+        liElement.addEventListener("drop", dropTodo);
+        liElement.addEventListener("dragstart", dragTodo);
+        liElement.addEventListener("dragover", dropTodo);
         liElement.innerHTML = todo;
         list.appendChild(liElement);
     }
@@ -39,6 +45,44 @@ function remove(event) {
     showList();
 }
 
+function dragTodo(event) {
+    let li = event.target;
+
+    let index = li.id;       // vị trí
+    let todo = li.innerHTML; // hiển thị
+
+    event.dataTransfer.setData("index", index);
+    event.dataTransfer.setData("todo", todo);
+}
+
+function dropTodo(event) {
+    event.preventDefault();
+
+    let oldIndex =  event.dataTransfer.getData("index");
+    let oldTodo =  event.dataTransfer.getData("todo");
+
+    let currentIndex = event.target.id;
+
+    console.log(oldIndex, oldTodo, currentIndex);
+    insertTodo(oldIndex, oldTodo, currentIndex);    
+}
+
+function allowTodo(event) {
+    event.preventDefault();
+}
+
+function insertTodo(oldIndex, oldTodo, currentIndex) {
+
+    const indexNumber = parseInt(oldIndex);
+    console.log(indexNumber);
+    if (isNaN(indexNumber)) return;
+
+    todoList.splice(oldIndex, 1);
+    todoList.splice(currentIndex, 0, oldTodo);
+
+    console.log(todoList);
+    showList();
+}
 
 // 1. Click vào 1 todo nào đó thì sẽ hoàn thành (xóa, hoặc gạch ngang todo đấy)
 // 2. Lưu todo-list vào bộ nhớ (để mở lần sau thì vẫn thấy được danh sách việc cần làm)
